@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Flashcards!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <section style="min-height: 100vh;">
+
+    <!-- Input for new Topic  -->
+    <div style="width: 100%; text-align: center; padding: 1em;">
+      <input maxlength="64" type="text" id="createTopicInput" placeholder="Create a new Topic" />
+      <button class="submitBtn" onclick="createTopic()"> Submit </button>
+    </div>
+
+    <!-- All Topics -->
+    <ul id="topicList">
+      <li>Loading, please wait...</li>
+    </ul>
+
+  </section>
+
+  <!-- Quick Start -->
+  <section>
+    <!-- TODO -->
+  </section>
+
+  <!-- About -->
+  <section>
+    <!-- TODO -->
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+
+  <script src="//cdn.jsdelivr.net/npm/pouchdb@7.1.1/dist/pouchdb.min.js"></script>
+
+  <script>
+
+    const db = new PouchDB('topics');
+    const remoteCouch = false;
+
+    const topicList = $("#topicList");
+    const topicNameInput = $("#createTopicInput");
+
+    db.changes({ since: 'now', live: true }).on('change', showTopics);
+
+    function showTopics() {
+      db.allDocs({ include_docs: true, descending: true })
+        .then(d => {
+          if (d.rows.length > 0) {
+
+            const topics = d.rows.map(({ doc }) =>
+              `<li class="topic"> ${new Date(Number(doc._id)).toLocaleDateString()} 
+              | <a href="topic.html?name=${doc.name}">${doc.name}</a>
+              | <button class="deleteBtn" onclick="deleteTopic('${doc._id}', 
+              '${doc.name}')">Delete</button></li>`);
+
+            topicList.empty().append(topics);
+
+          } else {
+            topicList.empty().append(`
+             <li> Hey there, welcome to my flashcards site! </li>
+             <li> Make sure to read the "Quick Start" guide below. </li>
+             <li> Or just get started by creating a new topic, it's pretty intuitive... </li>`);
+          }
+
+        }).catch(alert);
+    }
+
+    function createTopic() {
+
+      const topicName = topicNameInput[0].value;
+      if (!topicName || !topicName.trim()) return alert("Please enter a topic name");
+      if (topicName.length > 64) return alert("Topic must be less than 64 chars");
+
+      topicNameInput.val("");
+      const obj = { _id: Date.now().toString(), name: topicName };
+      db.put(obj).catch(alert);
+    }
+
+    function deleteTopic(id, name) {
+      if (confirm("Are you sure you want to delete? This will delete all stacks inside this topic.")) {
+        db.get(id)
+          .then(db.remove)
+          .then(() => {
+            const topicDB = new PouchDB(name);
+            topicDB.allDocs({ include_docs: true }).then(d => { //untested
+              d.rows.forEach(stack => {
+                const stackDB = new PouchDB(stack.name);
+                stackDB.destroy();
+              });
+            })
+            topicDB.destroy();
+          }).catch(alert);
+      }
+    }
+
+    showTopics();
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Flashcards!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <section style="min-height: 100vh;">
+
+    <!-- Input for new Stack  -->
+    <div style="width: 100%; text-align: center; padding: 1em;">
+      <button class="backBtn" type="button" onclick="window.history.back()">Back</button>
+      <input maxlength="64" type="text" id="createStackInput" placeholder="Create a new Stack" />
+      <button class="submitBtn" onclick="createStack()">Submit</button>
+    </div>
+
+    <!-- All Stacks -->
+    <ul id="stackList">
+      <li>...</li>
+    </ul>
+
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+
+  <script src="//cdn.jsdelivr.net/npm/pouchdb@7.1.1/dist/pouchdb.min.js"></script>
+
+  <script>
+    const topicName = new URLSearchParams(window.location.search).get("name");
+
+    const db = new PouchDB(topicName);
+    const remoteCouch = false;
+
+    const stackList = $("#stackList");
+    const stackNameInput = $("#createStackInput");
+
+    db.changes({ since: 'now', live: true }).on('change', showStacks);
+
+    function showStacks() {
+      db.allDocs({ include_docs: true })
+        .then(d => {
+          if (d.rows.length > 0) {
+
+            const stacksForThisTopic = [];
+            d.rows.forEach(({ doc }) => {
+              if (doc.topicName === topicName) stacksForThisTopic.push(doc);
+            });
+
+
+            const stacks = stacksForThisTopic.map(doc =>
+              `<li> ${new Date(Number(doc._id)).toLocaleDateString()} 
+              | <a href="stack.html?name=${doc.name}">${doc.name}</a>
+              | <button class="deleteBtn" onclick="deleteStack('${doc._id}', 
+              '${doc.name}')">Delete</button></li>`);
+
+            stackList.empty().append(stacks);
+
+          } else {
+            stackList.empty().append("<li>Create a new stack to get continue<li>");
+          }
+        }).catch(alert);
+    }
+
+    function createStack() {
+      const stackName = stackNameInput[0].value;
+      if (!stackName || !stackName.trim()) return alert("Please enter a stack name");
+      if (stackName.length > 64) return alert("stack must be less than 64 chars");
+
+      stackNameInput.val("");
+      const obj = { _id: Date.now().toString(), name: stackName, topicName };
+      db.put(obj).catch(alert);
+    }
+
+    function deleteStack(id, name) {
+      if (confirm("Are you sure you want to delete this stack? This will delete all cards inside")) {
+        db.get(id)
+          .then(db.remove)
+          .then(() => {
+            const stackDB = new PouchDB(name);
+            stackDB.destroy();
+          }).catch(alert);
+      }
+    }
+
+    showStacks();
+
+  </script>
+
+
+</body>
+
+</html>
