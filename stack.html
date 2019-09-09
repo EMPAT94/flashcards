@@ -38,8 +38,8 @@
     <!-- Modal content -->
     <div class="modal-content">
       <span class="close" onclick="closeCard()">&times;</span>
-      <p id="cardKey" style="color: grey;"></p>
-      <p id="cardValue" style="font-weight: bold; white-space: pre-line; word-wrap: break-word"></p>
+      <p id="cardKey" style="color: grey; white-space: pre-line; word-wrap: break-word;"></p>
+      <p id="cardValue" style="font-weight: bold; white-space: pre-line; word-wrap: break-word;"></p>
       <button id="deleteCardBtn" class="deleteBtn">Delete</button>
     </div>
   </div>
@@ -50,10 +50,10 @@
 
     <!-- Input for new Card  -->
     <div style="width: 100%; text-align: center; padding-top: 1em;">
-      <input maxlength="64" type="text" id="createCardKey" placeholder="Add a new Card Key" />
+      <input maxlength="64" style="width: 80%" type="text" id="createCardKey" placeholder="Add a new Card Front (Question)" />
       <br />
       <textarea maxlength="512" style="width: 80%; height: 5em;" type="text" id="createCardValue"
-        placeholder="Add a new Card Value"></textarea>
+        placeholder="Add a new Card Back (Answer)"></textarea>
       <br />
       <button class="backBtn" type="button" onclick="window.history.back()">Back</button>
       <button class="submitBtn" onclick="createCard()">Submit</button>

@@ -24,13 +24,45 @@
   </section>
 
   <!-- Quick Start -->
-  <section>
-    <!-- TODO -->
-  </section>
+  <section id="quickStartSection" style="padding: 1.5em;">
+    <h1>Flashcards</h1>
 
-  <!-- About -->
-  <section>
-    <!-- TODO -->
+    <p>Simple, Private, Secure... I created this flashcards app as a means for my own study. I'm sharing it with the hope that it will help you too.</p>
+
+    <p><a href="https://en.wikipedia.org/wiki/Flashcard" target="_blank">What are flashcards?</a></p>
+    <p><a target="_blank" href="https://medium.com/better-humans/how-to-unlock-the-amazing-power-of-your-brain-and-become-a-top-student-369e5ba59484">More about studying with flashcards</a></p>
+
+    <h2>Structure</h2>
+
+    <p>Imagine your knowledge as a tree. Any basic factoid that you know is part of a sub-field that belongs to a larger topic.</p>
+
+    <p>For example <b>the fact <em>Force = Mass * Acceleration</em> belongs to the sub-field or sub-topic of <em>Classical Physics</em> which in-itself is a subset of a larger branch of science named <em>Physics</em>.</b> While one can argue that there can be several more layers here, and it is true, I chose to keep a 3 layer heirarchy for both simplicity and ease of understanding.</p>
+
+    <p><b>So you have a Topic like <em>Physics</em> or <em>Mathematics</em> which include subtopics like <em>Quantum Physics</em> or <em>Probability</em> resp. These subtopics are the ones that actually hold all your flashcards.</b></p>
+
+    <p>If you've read <a href="https://en.wikipedia.org/wiki/Flashcard" target="_blank">"What are flashcards?"</a>, or already know 'em, <b>they have a front and back -> Ideally, front for questions and back for answers.</b></p>
+
+    <p>Once you enter a subtopic, you can create as many flash cards as you want inside it.</p>
+
+    <h2>Working</h2>
+
+    <p>The app leverages your browser's built-in database for storing all your data. This means there is no transfer of data - all your data is your own, <b>totally private.</b> This also means that the app can work <b>fully offline,</b> once you've loaded the site. </p>
+
+    <h2>Upcoming</h2>
+
+    <p>Backup and restore functionality</p>
+
+    <h2>Known Issues</h2>
+
+    <p>Not fully offline yet</p>
+    <p>Any other? let me know :)</p>
+
+    <h2>Contact</h2>
+
+    <p>Email me at <a href="mailto:priteshtupe+flashcards@gmail.com">priteshtupe@gmail.com</a></p>
+
+    <p>Source at <a target="_blank" href="https://github.com/EMPAT94/flashcards">https://github.com/EMPAT94/flashcards</a></p>
+
   </section>
 
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -83,7 +115,7 @@
     }
 
     function deleteTopic(id, name) {
-      if (confirm("Are you sure you want to delete? This will delete all stacks inside this topic.")) {
+      if (confirm("Are you sure you want to delete? This will delete all subtopics and cards inside this topic.")) {
         db.get(id)
           .then(db.remove)
           .then(() => {
