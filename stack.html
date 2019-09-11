@@ -25,6 +25,7 @@
       transition: 0.3s;
       margin: 1em;
       padding: 1em;
+      background: white;
     }
 
     .card:hover {
@@ -49,10 +50,10 @@
   <section style="min-height: 100vh;">
 
     <!-- Input for new Card  -->
-    <div style="width: 100%; text-align: center; padding-top: 1em;">
-      <input maxlength="64" style="width: 80%" type="text" id="createCardKey" placeholder="Add a new Card Front (Question)" />
+    <div style="width: 100%; text-align: center; padding-top: 1em;;">
+      <input maxlength="64" style="width: 80%; background: white" type="text" id="createCardKey" placeholder="Add a new Card Front (Question)" />
       <br />
-      <textarea maxlength="512" style="width: 80%; height: 5em;" type="text" id="createCardValue"
+      <textarea maxlength="512" style="width: 80%; margin-top: 1em; background: rgba(0, 0, 0, 0.05);" type="text" id="createCardValue"
         placeholder="Add a new Card Back (Answer)"></textarea>
       <br />
       <button class="backBtn" type="button" onclick="window.history.back()">Back</button>
